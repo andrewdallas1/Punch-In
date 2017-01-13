@@ -46,22 +46,24 @@ class App extends Component {
       this.setState({
         tasks: tasks
       })
+      console.log(this.state.tasks)
       this.getTasks();
     })
   }
 
   newTaskHandler(event) {
-    this.createTask(event.target.value);
+    event.preventDefault();
+    this.createTask(this.newTask.value);
     console.log(event.target.value);
+    event.target.value = "";
   }
 
   renderNewTaskInput() {
     return(
-      <div>
-        <input type='text' placeholder='New Task' />
-        <input type='submit' onClick={ this.newTaskHandler }>
-        </input>
-      </div>
+      <form>
+        <input ref={(input) => this.newTask = input} type='text' placeholder='New Task' />
+        <input type='submit' onClick={ this.newTaskHandler } />
+      </form>
     )
   }
 
