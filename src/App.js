@@ -27,6 +27,7 @@ class App extends Component {
       this.setState({
         tasks: res.data
       })
+      console.log(this.state.tasks)
    })
   }
 
@@ -71,10 +72,14 @@ class App extends Component {
 
   renderTasks() {
     console.log(this.state.tasks)
+    const { tasks } = this.state
     return(
       <div className="task-box pb-2">
         <ul className='tasks'>
-          <li>{this.state.tasks}</li>
+          {Object.keys(tasks)
+          .map(key => <li key={key}>{this.state.tasks[key].info}
+           </li>)
+        }
         </ul>
       </div>
     )
@@ -85,7 +90,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        {this.renderTasks()}
         {this.renderNewTaskInput()}
+
+
+
+
       </div>
     );
   }
