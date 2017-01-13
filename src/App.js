@@ -9,8 +9,10 @@ class App extends Component {
       tasks: {},
       newTaskInput: false
     }
-    this.newTaskHandler = this.newTaskHandler.bind(this)
-    this.renderInputHandler = this.renderInputHandler.bind(this)
+    this.newTaskHandler = this.newTaskHandler.bind(this);
+    this.renderInputHandler = this.renderInputHandler.bind(this);
+    this.getTasks = this.getTasks.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
   }
 
   componentDidMount() {
@@ -23,7 +25,6 @@ class App extends Component {
     url: '/tasks.json',
     baseURL: 'https://punch-in-94a10.firebaseio.com/',
     method: 'GET'
-
    }).then((res) => {
       console.log(res)
       this.setState({
@@ -91,6 +92,18 @@ class App extends Component {
     }
   }
 
+  deleteTask(event) {
+    let deleteKey = event.target.name;
+    axios({
+      url: `/tasks/${deleteKey}.json`,
+      baseURL: 'https://punch-in-94a10.firebaseio.com/',
+      method: 'DELETE',
+    }).then((res) => {
+      let tasks = this.state.tasks;
+      delete tasks[deleteKey];
+      this.setState({ tasks: tasks })
+    })
+  }
 
 
   renderTasks() {
@@ -101,7 +114,7 @@ class App extends Component {
         <ul className='tasks'>
           {Object.keys(tasks)
           .map(key => <li key={key}>{this.state.tasks[key].info}
-           </li>)
+           <button name={key} onClick={this.deleteTask}>X</button><button>Edit</button></li>)
         }
         </ul>
       </div>
