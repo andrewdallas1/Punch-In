@@ -7,8 +7,10 @@ class App extends Component {
     super();
     this.state = {
       tasks: {},
+      newTaskInput: false
     }
     this.newTaskHandler = this.newTaskHandler.bind(this)
+    this.renderInputHandler = this.renderInputHandler.bind(this)
   }
 
   componentDidMount() {
@@ -56,16 +58,37 @@ class App extends Component {
     event.preventDefault();
     this.createTask(this.newTask.value);
     console.log(event.target.value);
-    event.target.value = "";
+    this.setState({ newTaskInput: false});
   }
 
   renderNewTaskInput() {
-    return(
-      <form>
-        <input ref={(input) => this.newTask = input} type='text' placeholder='New Task' />
-        <input type='submit' onClick={ this.newTaskHandler } />
-      </form>
-    )
+    console.log('trying')
+    if(this.state.newTaskInput === true) {
+      return(
+        <form>
+          <input ref={(input) => this.newTask = input} type='text' placeholder='New Task' />
+          <input type='submit' onClick={ this.newTaskHandler } />
+        </form>
+      )
+    }
+  }
+
+  renderInputHandler() {
+    this.setState({
+      newTaskInput: true
+    })
+  }
+
+  renderAddTaskButton() {
+    if(this.state.newTaskInput === false) {
+      return(
+        <div className="add">
+          <button onClick={ this.renderInputHandler }>Add Task</button>
+        </div>
+      )
+    } else {
+      this.renderNewTaskInput();
+    }
   }
 
 
@@ -92,6 +115,7 @@ class App extends Component {
       <div className="App">
         {this.renderTasks()}
         {this.renderNewTaskInput()}
+        {this.renderAddTaskButton()}
 
 
 
