@@ -7,12 +7,17 @@ class App extends Component {
     super();
     this.state = {
       tasks: {},
-      newTaskInput: false
+      newTaskInput: false,
+      editable: false,
+      key: null
     }
     this.newTaskHandler = this.newTaskHandler.bind(this);
     this.renderInputHandler = this.renderInputHandler.bind(this);
+    this.editedTaskHandler = this.editedTaskHandler.bind(this);
+    this.editTask = this.editTask.bind(this);
     this.getTasks = this.getTasks.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
+    this.renderTasks = this.renderTasks.bind(this);
   }
 
   componentDidMount() {
@@ -108,17 +113,68 @@ class App extends Component {
 
   renderTasks() {
     console.log(this.state.tasks)
-    const { tasks } = this.state
-    return(
-      <div className="task-box pb-2">
-        <ul className='tasks'>
-          {Object.keys(tasks)
-          .map(key => <li key={key}>{this.state.tasks[key].info}
-           <button name={key} onClick={this.deleteTask}>X</button><button>Edit</button></li>)
-        }
-        </ul>
-      </div>
-    )
+    const { tasks } = this.state;
+    if(this.state.editable === false) {
+      return(
+        <div className="task-box pb-2">
+          <ul className='tasks'>
+            {Object.keys(tasks)
+            .map(key => <li key={key}>{this.state.tasks[key].info}
+             <button name={key} onClick={this.deleteTask}>X</button>
+             <button name={key} onClick={() => this.selectTask(key)}>Edit</button></li>)
+          }
+          </ul>
+        </div>
+      )
+    } else {
+      return(
+        <form>
+          <input ref={(input) => this.editedTask = input} type='text' placeholder='New Task' />
+          <input type='submit' onClick={ this.editedTaskHandler } />
+        </form>
+      )
+    }
+  }
+
+  editedTaskHandler(event) {
+    event.preventDefault();
+    console.log(event.target.name)
+    this.editTask(this.editedTask.value);
+    console.log(event.target.value);
+    this.setState({
+      editable: false,
+      editableTask: null
+    });
+  }
+
+  editTask(editedTaskText) {
+    let editedTask = { info: editedTaskText }
+    let editKey = this.state.editableTask;
+    axios({
+      url: `/tasks/${editKey}.json`,
+      baseURL: 'https://punch-in-94a10.firebaseio.com/',
+      method: 'PATCH',
+      data: editedTask
+    }).then((res) => {
+      let tasks = this.state.tasks;
+      let editedTaskId = res.data.name;
+      console.log(editedTaskId)
+      tasks[editedTaskId] = editedTask;
+      console.log(tasks)
+      this.setState({
+        tasks: tasks
+      })
+      console.log(this.state.tasks)
+      this.getTasks();
+    })
+  }
+
+  selectTask(key) {
+    this.setState({
+      editableTask: key,
+      editable: true
+    })
+    console.log(this.state.selectedTask)
   }
 
 
