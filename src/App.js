@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Task from './components/Task';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -7,9 +8,12 @@ class App extends Component {
     super();
     this.state = {
       tasks: {},
+      time: {},
       newTaskInput: false,
       editable: false,
-      key: null
+      editableTaskText: "",
+      key: null,
+      punchedIn: false
     }
     this.newTaskHandler = this.newTaskHandler.bind(this);
     this.renderInputHandler = this.renderInputHandler.bind(this);
@@ -18,10 +22,13 @@ class App extends Component {
     this.getTasks = this.getTasks.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
     this.renderTasks = this.renderTasks.bind(this);
+    this.getEditableTask = this.getEditableTask.bind(this);
+    this.punchIn = this.punchIn.bind(this);
   }
 
   componentDidMount() {
     this.getTasks();
+    this.getLog();
   }
 
   getTasks() {
@@ -128,23 +135,45 @@ class App extends Component {
       )
     } else {
       return(
+        <div className="task-box pb-2">
+        <ul className='tasks'>
+            {Object.keys(tasks)
+            .map(key => <li key={key}>{this.state.tasks[key].info}
+             <button name={key} onClick={this.deleteTask}>X</button>
+             <button name={key} onClick={() => this.selectTask(key)}>Edit</button></li>)
+          }
+          </ul>
         <form>
-          <input ref={(input) => this.editedTask = input} type='text' placeholder='New Task' />
+          <input ref={(input) => this.editedTask = input} type='text'
+            defaultValue={this.state.editableTaskText} />
           <input type='submit' onClick={ this.editedTaskHandler } />
         </form>
+        </div>
       )
     }
   }
 
+  getEditableTask(et) {
+    axios.get(`https://punch-in-94a10.firebaseio.com/tasks/${et}.json`)
+      .then((res) => {
+        console.log(res)
+
+        this.setState({
+          editableTaskText: res.data.info
+        })
+        console.log(this.state.editableTasText)
+      })
+  }
+
   editedTaskHandler(event) {
     event.preventDefault();
-    console.log(event.target.name)
+
     this.editTask(this.editedTask.value);
     console.log(event.target.value);
     this.setState({
       editable: false,
-      editableTask: null
     });
+
   }
 
   editTask(editedTaskText) {
@@ -174,7 +203,92 @@ class App extends Component {
       editableTask: key,
       editable: true
     })
-    console.log(this.state.selectedTask)
+    this.getEditableTask(key);
+
+  }
+
+  punchIn() {
+    if(this.state.punchedIn === false) {
+    console.log(moment().format('LTS'))
+    this.setState({
+      punchedIn: true,
+    })
+    this.renderPunchInButton();
+    this.logPunchIn();
+    this.getLog();
+  } else {
+    this.setState({
+      punchedIn: false,
+    })
+    this.renderPunchInButton();
+    this.logPunchIn();
+    this.getLog();
+  }
+  }
+
+  logPunchIn() {
+    let newTime = { info: moment().format('LTS') }
+    console.log(moment().format('LTS'))
+    axios({
+      url: '/time.json',
+      baseURL: 'https://punch-in-94a10.firebaseio.com/',
+      method: 'POST',
+      data: newTime
+    }).then((res) => {
+      console.log(res);
+      }).catch((err) => {
+        console.error(err);
+      })
+      console.log(this.state.tasks)
+  }
+
+  getLog() {
+    axios({
+      url: '/time.json',
+      baseURL: 'https://punch-in-94a10.firebaseio.com/',
+      method: 'Get'
+    }).then((res) => {
+      console.log(res);
+      this.setState({
+        time: res.data
+      })
+      console.log(this.state.time)
+      }).catch((err) => {
+        console.error(err);
+      })
+      console.log(this.state.tasks)
+  }
+  renderTime() {
+    console.log(this.state.time)
+    const { time } = this.state;
+
+      return(
+        <div className="task-box pb-2">
+          <ul className='tasks'>
+            {Object.keys(time)
+            .map(key => <li key={key}>{this.state.time[key].info}
+            </li>)
+          }
+          </ul>
+        </div>
+      )
+    }
+
+
+  renderPunchInButton() {
+    if(this.state.punchedIn === false) {
+      return(
+        <div className="punch">
+          <button className="punchIn" onClick={this.punchIn}>Punch-In</button>
+        </div>
+      )
+    } else {
+        return(
+          <div className="punch">
+            <button className="punchOut" onClick={this.punchIn}>Punch-Out</button>
+          </div>
+        )
+      }
   }
 
 
@@ -182,13 +296,17 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {this.renderTasks()}
+        <Task
+          tasks={this.state.tasks}
+          editable={this.state.editable}
+          deleteTask={this.deleteTask}
+          selectTask={this.selectTask}
+          editedTaskHandler={this.editedTaskHandler}
+        />
+        {this.renderTime()}
         {this.renderNewTaskInput()}
         {this.renderAddTaskButton()}
-
-
-
-
+        {this.renderPunchInButton()}
       </div>
     );
   }
