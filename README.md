@@ -6,10 +6,10 @@
  as well as a time log to make workplace prioritizing as simple as it should be.
 
 The technologies used in this app include:
--React.js
--Javascript
--CSS
--Firebase
+- React.js
+- Javascript
+- CSS
+- Firebase
 
 [Find Punch-In on Bitballoon](http://housing-agent-camel-84028.bitballoon.com/)
 ![Punch-In](https://i.imgur.com/VaZlAOM.png)
