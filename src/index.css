@@ -2,4 +2,162 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  position: relative;
+  height: 700px;
+  width: 100%;
+  background-color: #1D2731;
 }
+
+.App {
+  height: 500px;
+  width: 1100px;
+  margin: 0 auto;
+}
+
+.tasks{
+  height: 500px;
+  width: 400px;
+  margin-left: 45px;
+  margin-top: 50px;
+  position: absolute;
+  background-color: #0B3C5D;
+  border-radius: 25%;
+}
+
+.tasks-list{
+  border: 3px solid #328CC1;
+  height: 400px;
+  width: 300px;
+  position: relative;
+  margin: 0 auto;
+  overflow: scroll;
+  word-wrap: break-word;
+}
+
+.log{
+  height: 500px;
+  width: 400px;
+  margin-top: 50px;
+  margin-left: 665px;
+  position: absolute;
+  background-color: #0B3C5D;
+  border-radius: 25%;
+}
+
+.log-list{
+  border: 3px solid #328CC1;
+  height: 400px;
+  width: 300px;
+  position: relative;
+  margin: 0 auto;
+  overflow: scroll;
+}
+
+h1 {
+  position: relative;
+  font-family: 'Shrikhand', cursive;
+  font-size: 48px;
+  text-align: center;
+  color: #328CC1;
+}
+h2 {
+  font-family: 'Shrikhand', cursive;
+  font-size: 28px;
+  text-align: center;
+  color: #328CC1;
+}
+
+h4 {
+  font-family: 'Shrikhand', cursive;
+  text-align: center;
+  color: #328CC1;
+}
+
+.add {
+  font-family: 'Shrikhand', cursive;
+  background-color: #D9B310;
+  color: #328CC1;
+  font-size: 22px;
+  margin-left: 480px;
+  margin-top: 200px;
+  position: absolute;
+  height: 75px;
+  width: 150px;
+  border-radius: 20%;
+}
+
+.newTask {
+  margin-left: 449px;
+  margin-top: 200px;
+  position: absolute;
+}
+
+.submit {
+  position: relative;
+  margin: 0 auto;
+}
+
+.punchIn {
+  font-family: 'Shrikhand', cursive;
+  background-color: #D9B310;
+  color: #328CC1;
+  font-size: 22px;
+  margin-left: 480px;
+  margin-top: 350px;
+  position: absolute;
+  height: 75px;
+  width: 150px;
+  border-radius: 20%;
+}
+
+.punchOut {
+  font-family: 'Shrikhand', cursive;
+  background-color: #D9B310;
+  color: #328CC1;
+  font-size: 22px;
+  margin-left: 480px;
+  margin-top: 350px;
+  position: absolute;
+  height: 75px;
+  width: 150px;
+  border-radius: 20%;
+}
+
+.delete {
+  background-color: #D9B310;
+  color: #328CC1;
+  position: relative;
+  margin-left: 25px;
+
+}
+.edit {
+  background-color: #D9B310;
+  color: #328CC1;
+  position: relative;
+  margin-left: 25px;
+  margin: 10px;
+}
+
+.input {
+  margin-left: 95px;
+}
+
+.time-element {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Montserrat', sans-serif;
+  padding: 5px;
+  color: #D9B310;
+}
+
+.task-element {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  padding: 5px;
+  color: #D9B310;
+}
+
+
+
+
+
