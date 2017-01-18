@@ -26,6 +26,7 @@ class App extends Component {
     this.getEditableTask = this.getEditableTask.bind(this);
     this.punchIn = this.punchIn.bind(this);
     this.selectTask = this.selectTask.bind(this)
+    this.getLog = this.getLog.bind(this)
   }
 
   componentDidMount() {
@@ -163,14 +164,14 @@ class App extends Component {
     })
     this.renderPunchInButton();
     this.logPunchIn();
-    setTimeout(this.getLog(), 1000);
+    this.getLog();
   } else {
     this.setState({
       punchedIn: false,
     })
     this.renderPunchInButton();
     this.logPunchIn();
-    setTimeout(this.getLog(), 1000);
+    this.getLog();
   }
   }
 
@@ -182,6 +183,13 @@ class App extends Component {
       method: 'POST',
       data: newTime
     }).then((res) => {
+      let time = this.state.time;
+      let newTimeId = res.data.name;
+      time[newTimeId] = newTime;
+      this.setState({
+        time: time
+      })
+      console.log(this.state.time)
       }).catch((err) => {
         console.error(err);
       })
